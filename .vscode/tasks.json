@@ -1,0 +1,111 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile with VBCC",
+            "type": "shell",
+            "windows": {
+                "command": "vc",
+                "args": [
+                    "+aos68k",
+                    "-c99",
+                    "-O2",
+                    "-lamiga",
+                    "-lauto",
+                    "-o",
+                    "host-run",
+                    "src/host-run.c"
+                ]
+            },
+            "osx": {
+                "command": "vc",
+                "args": [
+                    "+aos68k",
+                    "-c99",
+                    "-O2",
+                    "-lamiga",
+                    "-lauto",
+                    "-o",
+                    "host-run",
+                    "src/host-run.c"
+                ]
+            },
+            "linux": {
+                "command": "vc",
+                "args": [
+                    "+aos68k",
+                    "-c99",
+                    "-O2",
+                    "-lamiga",
+                    "-lauto",
+                    "-o",
+                    "host-run",
+                    "src/host-run.c"
+                ]
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "windows": {
+                "command": "rm",
+                "args": [
+                    "-Path",
+                    "./host-run,",
+                    "./src/host-run.o,"
+                ]
+            },
+            "osx": {
+                "command": "rm",
+                "args": [
+                    "./host-run,",
+                    "./src/host-run.o,"
+                ]
+            },
+            "linux": {
+                "command": "rm",
+                "args": [
+                    "./host-run,",
+                    "./src/host-run.o,"
+                ]
+            }
+        },
+        {
+            "label": "LHA Pack",
+            "type": "shell",
+            "windows": {
+                "command": "lha",
+                "args": [
+                    "a",
+                    "host-run.lha",
+                    "host-run",
+                    "README.md"
+                ]
+            },
+            "osx": {
+                "command": "lha",
+                "args": [
+                    "a",
+                    "host-run.lha",
+                    "host-run",
+                    "README.md"
+                ]
+            },
+            "linux": {
+                "command": "lha",
+                "args": [
+                    "a",
+                    "host-run.lha",
+                    "host-run",
+                    "README.md"
+                ]
+            }
+        }
+    ]
+}
