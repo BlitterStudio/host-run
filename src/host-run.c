@@ -3,11 +3,12 @@
 #include <stdlib.h>
 #include "uae_pragmas.h"
 
-static const char version[] = "$VER: Host-Run v1.1";
+static const char version[] = "$VER: Host-Run v1.2";
 
 int main(int argc, char *argv[])
 {
     char command[255];
+    memset(command, '\0', 255);
 
     if (argc <= 1)
     {
