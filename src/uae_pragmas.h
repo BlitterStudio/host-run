@@ -102,6 +102,38 @@ static int DebugFunc(void)
 {
     return calltrap (15);
 }
+static int Minimize(void)
+{
+    return calltrap(68);
+}
+static int ExecuteNativeCode()
+{
+    return calltrap(69);
+}
+static int UnprotectMapRom()
+{
+    return calltrap(80);
+}
+static int EmuConfig(int mode, UBYTE *name, ULONG dst, ULONG maxlength)
+{
+    return calltrap(81, mode, name, dst, maxlength);
+}
+static int EmuConfigModify(int mode, UBYTE *parms, ULONG size, ULONG out, ULONG outsize)
+{
+    return calltrap(82, mode, parms, size, out, outsize);
+}
+static int IsMMKeyboard()
+{
+    return calltrap(83);
+}
+static int NativeDosOp(ULONG mode, ULONG lock, ULONG out, ULONG outsize)
+{
+    return calltrap(85, mode, lock, out, outsize);
+}
+static int GetCpuRate()
+{
+    return calltrap(87);
+}
 static int ExecuteOnHost(UBYTE *name)
 {
     return calltrap (88, name);
