@@ -9,4 +9,10 @@ Host-run is a tiny AmigaOS tool, which allows you to have Amiberry execute a com
 
 # Examples
 * Running Firefox from an AmigaOS shell: `host-run firefox`
-* Running Chromium browser with a specific website `host-run chromium-browser https://github.com/midwan/amiberry`
+* Running Chromium browser with a specific website: `host-run chromium-browser https://github.com/midwan/amiberry`
+* ### Create an icon to launch VLC: 
+* Create a new text file, with these contents: `host-run vlc`
+* Create a new icon or copy one you like, give it the same name as your text file above.
+* Edit the icon's Information and make sure the Type is set to Project
+* Set the icon's default tool to "C:IconX" and save the changes
+* Double-clicking on the icon should now launch VLC on Linux.
