@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "uae_pragmas.h"
 
-static const char version[] = "$VER: Host-Run v1.2";
+static const char version[] = "$VER: Host-Run v1.3";
 
 int main(int argc, char *argv[])
 {
@@ -28,11 +28,9 @@ int main(int argc, char *argv[])
 
         if (i != argc - 1)
             strcat(command, " ");
-        else
-            strcat(command, " &\n");
     }
 
     // printf("DEBUG: %s", command);
-    ExecuteOnHost((UBYTE*)&command);
+    ExecuteOnHost((UBYTE *)&command);
     memset(command, '\0', 255);
 }
