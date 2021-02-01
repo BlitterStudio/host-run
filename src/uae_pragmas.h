@@ -1,6 +1,29 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 
+/*
+ * Configuration structure
+ */
+struct UAE_CONFIG
+{
+       ULONG             version;
+       ULONG             chipmemsize;
+       ULONG             slowmemsize;
+       ULONG             fastmemsize;
+       ULONG             framerate;
+       ULONG             do_output_sound;
+       ULONG             do_fake_joystick;
+       ULONG             keyboard;
+       UBYTE             disk_in_df0;
+       UBYTE             disk_in_df1;
+       UBYTE             disk_in_df2;
+       UBYTE             disk_in_df3;
+       char              df0_name[256];
+       char              df1_name[256];
+       char              df2_name[256];
+       char              df3_name[256];
+};
+
 struct uaebase
 {
 	struct Library uae_lib;

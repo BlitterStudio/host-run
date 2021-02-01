@@ -51,28 +51,108 @@
             }
         },
         {
+            "label": "Compile with GCC (Docker)",
+            "type": "shell",
+            "windows": {
+                "command": "docker",
+                "args": [
+                    "run",
+                    "--rm",
+                    "-v",
+                    "${workspaceFolder}:/work",
+                    "-it",
+                    "amigadev/crosstools:m68k-amigaos",
+                    "make"
+                ]
+            }
+        },
+        {
+            "label": "Clean (Docker)",
+            "type": "shell",
+            "windows": {
+                "command": "docker",
+                "args": [
+                    "run",
+                    "--rm",
+                    "-v",
+                    "${workspaceFolder}:/work",
+                    "-it",
+                    "amigadev/crosstools:m68k-amigaos",
+                    "make",
+                    "clean"
+                ]
+            }
+        },
+        {
+            "label": "Compile host-shell with VBCC",
+            "type": "shell",
+            "windows": {
+                "command": "vc",
+                "args": [
+                    "+aos68k",
+                    "-c99",
+                    "-O2",
+                    "-lamiga",
+                    "-lauto",
+                    "-o",
+                    "host-shell",
+                    "src/host-shell.c"
+                ]
+            },
+            "osx": {
+                "command": "vc",
+                "args": [
+                    "+aos68k",
+                    "-c99",
+                    "-O2",
+                    "-lamiga",
+                    "-lauto",
+                    "-o",
+                    "host-shell",
+                    "src/host-shell.c"
+                ]
+            },
+            "linux": {
+                "command": "vc",
+                "args": [
+                    "+aos68k",
+                    "-c99",
+                    "-O2",
+                    "-lamiga",
+                    "-lauto",
+                    "-o",
+                    "host-shell",
+                    "src/host-shell.c"
+                ]
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
             "label": "Clean",
             "type": "shell",
             "windows": {
                 "command": "rm",
                 "args": [
                     "-Path",
-                    "./host-run,",
-                    "./src/host-run.o,"
+                    "${workspaceFolder}/host-run,",
+                    "${workspaceFolder}/src/host-run.o,"
                 ]
             },
             "osx": {
                 "command": "rm",
                 "args": [
-                    "./host-run,",
-                    "./src/host-run.o,"
+                    "${workspaceFolder}/host-run,",
+                    "${workspaceFolder}/src/host-run.o,"
                 ]
             },
             "linux": {
                 "command": "rm",
                 "args": [
-                    "./host-run,",
-                    "./src/host-run.o,"
+                    "${workspaceFolder}/host-run,",
+                    "${workspaceFolder}/src/host-run.o,"
                 ]
             }
         },

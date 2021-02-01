@@ -3,7 +3,13 @@
 #include <stdlib.h>
 #include "uae_pragmas.h"
 
-static const char version[] = "$VER: Host-Run v1.3";
+static const char __ver[40] = "$VER: Host-Run v1.4 (2021-02-01)";
+
+int print_usage()
+{
+    printf("%s\nUsage: host-run <command> <argument1> <argument2> ...\n", __ver);
+    return 0;
+}
 
 int main(int argc, char *argv[])
 {
@@ -13,7 +19,7 @@ int main(int argc, char *argv[])
     if (argc <= 1)
     {
         printf("Missing argument\n");
-        return 0;
+        return print_usage();
     }
 
     if (!InitUAEResource())
@@ -22,15 +28,25 @@ int main(int argc, char *argv[])
         return 2;
     }
 
+    if (strcmp(argv[1], "?") == 0)
+    {
+        return print_usage();
+    }
+
     for (int i = 1; i < argc; i++)
     {
+#ifdef DEBUG
+        printf("DEBUG: argv[%d]=%s\n", i, argv[i]);
+#endif
         strcat(command, argv[i]);
 
         if (i != argc - 1)
             strcat(command, " ");
     }
 
-    // printf("DEBUG: %s", command);
+#ifdef DEBUG
+    printf("DEBUG: argc=%d, command=%s\n", argc, command);
+#endif
     ExecuteOnHost((UBYTE *)&command);
     memset(command, '\0', 255);
 }
