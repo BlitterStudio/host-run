@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "uae_pragmas.h"
 
-static const char __ver[40] = "$VER: Host-Run v1.4 (2021-02-01)";
+static const char __ver[40] = "$VER: Host-Run v1.5 (2021-02-03)";
 
 int print_usage()
 {
@@ -13,14 +13,11 @@ int print_usage()
 
 int main(int argc, char *argv[])
 {
-    char command[255];
-    memset(command, '\0', 255);
-
-    if (argc <= 1)
-    {
-        printf("Missing argument\n");
-        return print_usage();
-    }
+    BPTR lock;
+    char command[2048];
+    char filename[100];
+    memset(command, '\0', 2048);
+    memset(filename, '\0', 100);
 
     if (!InitUAEResource())
     {
@@ -28,17 +25,35 @@ int main(int argc, char *argv[])
         return 2;
     }
 
+    if (argc <= 1)
+    {
+        printf("Missing argument\n");
+        return print_usage();
+    }
+
     if (strcmp(argv[1], "?") == 0)
     {
         return print_usage();
     }
-
-    for (int i = 1; i < argc; i++)
+    else
     {
-#ifdef DEBUG
-        printf("DEBUG: argv[%d]=%s\n", i, argv[i]);
-#endif
-        strcat(command, argv[i]);
+        strcat(command, argv[1]);
+        strcat(command, " ");
+    }
+
+    for (int i = 2; i < argc; i++)
+    {
+        if (lock = Lock(argv[i], ACCESS_READ))
+        {
+            NativeDosOp((ULONG)0, (ULONG)lock, (ULONG)filename, (ULONG)100);
+            UnLock(lock);
+            strcat(command, filename);
+            memset(filename, '\0', 100);      
+        }
+        else 
+        {
+            strcat(command, argv[i]);
+        }
 
         if (i != argc - 1)
             strcat(command, " ");
@@ -48,5 +63,5 @@ int main(int argc, char *argv[])
     printf("DEBUG: argc=%d, command=%s\n", argc, command);
 #endif
     ExecuteOnHost((UBYTE *)&command);
-    memset(command, '\0', 255);
+    memset(command, '\0', 2048);
 }
