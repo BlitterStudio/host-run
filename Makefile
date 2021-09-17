@@ -12,4 +12,4 @@ host-multiview: $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDES) src/host-multiview.c -o $@
 
 clean:
-	rm host-run
+	rm host-run host-multiview
