@@ -157,7 +157,7 @@
             }
         },
         {
-            "label": "LHA Pack",
+            "label": "LHA Pack host-run",
             "type": "shell",
             "windows": {
                 "command": "lha",
@@ -183,6 +183,37 @@
                     "a",
                     "host-run.lha",
                     "host-run",
+                    "README.md"
+                ]
+            }
+        },
+        {
+            "label": "LHA Pack host-multiview",
+            "type": "shell",
+            "windows": {
+                "command": "lha",
+                "args": [
+                    "a",
+                    "host-multiview.lha",
+                    "host-multiview",
+                    "README.md"
+                ]
+            },
+            "osx": {
+                "command": "lha",
+                "args": [
+                    "a",
+                    "host-multiview.lha",
+                    "host-multiview",
+                    "README.md"
+                ]
+            },
+            "linux": {
+                "command": "lha",
+                "args": [
+                    "a",
+                    "host-multiview.lha",
+                    "host-multiview",
                     "README.md"
                 ]
             }
