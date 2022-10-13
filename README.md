@@ -23,7 +23,7 @@ It calls `xdg-open` with the parameters you give it, which should make Linux ope
 ## Examples
 
 * Running Firefox from an AmigaOS shell: `host-run firefox`
-* Running Chromium browser with a specific website: `host-run chromium-browser https://github.com/midwan/amiberry`
+* Running Chromium browser with a specific website (Amiberry in this case): `host-run chromium-browser https://github.com/BlitterStudio/amiberry`
 * Launching VLC to play a video (assuming Work: is a directory on the Linux filesystem): `host-run vlc Work:videos/my_video.mkv`
 * Using host-multivew to open the same video file (to demonstrae the simplicity): `host-multiview Work:videos/my_video.mkv`
 
