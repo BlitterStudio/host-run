@@ -84,6 +84,53 @@
             }
         },
         {
+            "label": "Compile host-multiview with VBCC",
+            "type": "shell",
+            "windows": {
+                "command": "vc",
+                "args": [
+                    "+aos68k",
+                    "-c99",
+                    "-O2",
+                    "-lamiga",
+                    "-lauto",
+                    "-o",
+                    "host-multiview",
+                    "src/host-multiview.c"
+                ]
+            },
+            "osx": {
+                "command": "vc",
+                "args": [
+                    "+aos68k",
+                    "-c99",
+                    "-O2",
+                    "-lamiga",
+                    "-lauto",
+                    "-o",
+                    "host-multiview",
+                    "src/host-multiview.c"
+                ]
+            },
+            "linux": {
+                "command": "vc",
+                "args": [
+                    "+aos68k",
+                    "-c99",
+                    "-O2",
+                    "-lamiga",
+                    "-lauto",
+                    "-o",
+                    "host-multiview",
+                    "src/host-multiview.c"
+                ]
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
             "label": "Compile host-shell with VBCC",
             "type": "shell",
             "windows": {
@@ -138,21 +185,27 @@
                 "args": [
                     "-Path",
                     "${workspaceFolder}/host-run,",
-                    "${workspaceFolder}/src/host-run.o,"
+                    "${workspaceFolder}/src/host-run.o,",
+                    "${workspaceFolder}/host-multiview,",
+                    "${workspaceFolder}/src/host-multiview.o,"
                 ]
             },
             "osx": {
                 "command": "rm",
                 "args": [
                     "${workspaceFolder}/host-run,",
-                    "${workspaceFolder}/src/host-run.o,"
+                    "${workspaceFolder}/src/host-run.o,",
+                    "${workspaceFolder}/host-multiview,",
+                    "${workspaceFolder}/src/host-multiview.o,"
                 ]
             },
             "linux": {
                 "command": "rm",
                 "args": [
                     "${workspaceFolder}/host-run,",
-                    "${workspaceFolder}/src/host-run.o,"
+                    "${workspaceFolder}/src/host-run.o,",
+                    "${workspaceFolder}/host-multiview,",
+                    "${workspaceFolder}/src/host-multiview.o,"
                 ]
             }
         },
