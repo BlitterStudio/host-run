@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "uae_pragmas.h"
 
-static const char __ver[40] = "$VER: Host-Run v1.5 (2021-02-03)";
+static const char __ver[40] = "$VER: Host-Run v1.6 (2024-08-23)";
 
 int print_usage()
 {
@@ -37,8 +37,8 @@ int main(int argc, char *argv[])
     }
     else
     {
-        strcat(command, argv[1]);
-        strcat(command, " ");
+        strncat(command, argv[1], sizeof(command) - strlen(command) - 1);
+        strncat(command, " ", sizeof(command) - strlen(command) - 1);
     }
 
     for (int i = 2; i < argc; i++)
@@ -47,16 +47,20 @@ int main(int argc, char *argv[])
         {
             NativeDosOp((ULONG)0, (ULONG)lock, (ULONG)filename, (ULONG)100);
             UnLock(lock);
-            strcat(command, filename);
+            strncat(command, "\"", sizeof(command) - strlen(command) - 1);
+            strncat(command, filename, sizeof(command) - strlen(command) - 1);
+            strncat(command, "\"", sizeof(command) - strlen(command) - 1);
             memset(filename, '\0', 100);      
         }
         else 
         {
-            strcat(command, argv[i]);
+            strncat(command, "\"", sizeof(command) - strlen(command) - 1);
+            strncat(command, argv[i], sizeof(command) - strlen(command) - 1);
+            strncat(command, "\"", sizeof(command) - strlen(command) - 1);
         }
 
         if (i != argc - 1)
-            strcat(command, " ");
+            strncat(command, " ", sizeof(command) - strlen(command) - 1);
     }
 
 #ifdef DEBUG
