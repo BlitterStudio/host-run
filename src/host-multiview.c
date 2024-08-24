@@ -3,10 +3,12 @@
 #include <stdlib.h>
 #include "uae_pragmas.h"
 
-static const char __ver[40] = "$VER: Host-MultiView v1.1 (2024-08-23)";
+static const char __ver[40] = "$VER: Host-MultiView v1.2 (2024-08-24)";
 
 int print_usage()
 {
+    printf("Host-MultiView v1.2\n");
+    printf("Host-MultiView is a command line tool to open files with the host default handler, from within UAE.\n");
     printf("%s\nUsage: host-multiview <filename>\n", __ver);
     return 0;
 }
@@ -15,9 +17,11 @@ int main(int argc, char *argv[])
 {
     BPTR lock;
     char command[100];
-    char filename[4095];
+    char filename[256];
+    char escaped_filename[512];
     memset(command, '\0', 100);
-    memset(filename, '\0', 4095);
+    memset(filename, '\0', 256);
+    memset(escaped_filename, '\0', 512);
 
     if (!InitUAEResource())
     {
@@ -45,18 +49,28 @@ int main(int argc, char *argv[])
     {
         if (lock = Lock(argv[i], ACCESS_READ))
         {
-            NativeDosOp((ULONG)0, (ULONG)lock, (ULONG)filename, (ULONG)100);
+            NativeDosOp((ULONG)0, (ULONG)lock, (ULONG)filename, (ULONG)256);
             UnLock(lock);
-            strncat(command, "\"", sizeof(command) - strlen(command) - 1);
+
+            // Escape spaces in filename
+            int j = 0;
+            for (int k = 0; k < strlen(filename); k++)
+            {
+                if (filename[k] == ' ')
+                {
+                    escaped_filename[j++] = '\\';
+                }
+                escaped_filename[j++] = filename[k];
+            }
+            escaped_filename[j] = '\0';
+
             strncat(command, filename, sizeof(command) - strlen(command) - 1);
-            strncat(command, "\"", sizeof(command) - strlen(command) - 1);
-            memset(filename, '\0', 4095);
+            memset(filename, '\0', 256);
+            memset(escaped_filename, '\0', 512);
         }
         else 
         {
-            strncat(command, "\"", sizeof(command) - strlen(command) - 1);
             strncat(command, argv[i], sizeof(command) - strlen(command) - 1);
-            strncat(command, "\"", sizeof(command) - strlen(command) - 1);
         }
 
         if (i != argc - 1)
