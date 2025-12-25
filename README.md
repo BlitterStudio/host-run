@@ -1,44 +1,92 @@
-# What is this
+# Amiberry Host Tools
 
-A small collection of tools to help Amiberry communicate with the underlying Linux OS.
+A collection of AmigaOS tools designed to bridge the gap between the Amiberry emulator and the host operating system (Linux, macOS, etc.).
 
-## Host-Run
+These tools allow you to execute commands, open files, and launch interactive shells on the host system directly from the Amiga environment.
 
-Host-run is a tiny AmigaOS tool, which allows you to have Amiberry execute a command on the underlying Linux operating system, with optional parameters. Think AmiKit's RabbitHole feature, only running on Amiberry and Linux (instead of WinUAE and Windows).
-For example, you can have AmigaOS open Firefox (from the Linux side) and even pass a parameter of the website you want it to open.
+## The Tools
 
-## Host-MultiView
+### 1. host-run
+**Execute host commands securely.**
+`host-run` allows you to execute any command on the host system. It is designed to be robust and secure:
+-   **Safe Quoting**: Arguments are automatically safeguarded, allowing you to pass complex filenames and parameters (including spaces and special characters) without issues.
+-   **Path Translation**: Amiga paths (e.g., `Work:Documents/file.txt`) are automatically resolved to their host counterparts before execution.
 
-Host-Multiview is a tiny tool, similar to `host-run` mentioned above, but with a small change.
-It calls `xdg-open` with the parameters you give it, which should make Linux open the file(s) you passed with the default filetype handler. For example, if you pass it an MKV file, it can open it with VLC, if you pass it an mp3 file, it may open it with Audacious, etc.
+**Usage:**
+```shell
+host-run <command> [arguments...]
+```
 
-## How does it work
+### 2. host-multiview
+**Open files with the default host application.**
+Think of this as an "Open with..." command for the Amiga. It sends a file to the host system, which then opens it using the default associated application (e.g., VLC for videos, Preview for images).
+-   **Cross-Platform**: Works natively on **Linux** (via `xdg-open`) and **macOS** (via `open`).
+-   **Seamless**: Perfect for integration with DefIcons to open media files or documents on the host.
 
-* You can get the pre-compiled binaries from the Releases page.
-* Place them somewhere in your path (e.g. C: is a good idea)
-* Use them from an AmigaOS Shell, script or icon (make sure it runs as Shell, not Workbench), to execute a Linux command with any parameters.
-* If Amiberry's option to allow Native Code is enabled (in the Misc Panel), it will execute that command along with any parameters for you.
-* Since Amiberry v3.4, AmigaOS device and volume names are automatically translated to the underlying host paths. This allows you to provide the full path to a file with host-run (or host-multiview), and as long as the location is accessible from the Linux side (i.e. it's not in a hardfile), it will find and access it.
+**Usage:**
+```shell
+host-multiview <filename>
+```
+
+### 3. host-shell
+**Interactive Host Terminal.**
+Opens a fully interactive terminal session on the host system, right inside your Amiga CLI.
+-   **Interactive**: Supports `vi`, `htop`, and other interactive TUI applications.
+-   **Shell Support**: Respects your host's default shell (Bash, Zsh, Fish, etc.).
+-   **Raw Mode**: Provides a true terminal experience.
+
+**Usage:**
+```shell
+host-shell
+```
+
+---
+
+## Requirements
+
+-   **Amiberry v6.0+** (or a version with updated `uaelib` support).
+-   "Native Code" execution must be enabled in Amiberry settings.
+
+## Installation
+
+1.  Download the latest release from the [Releases Page](../../releases).
+2.  Extract the `.lha` archive.
+3.  Copy the binaries (`host-run`, `host-multiview`, `host-shell`) to `C:` or anywhere in your system path.
 
 ## Examples
 
-* Running Firefox from an AmigaOS shell: `host-run firefox`
-* Running Chromium browser with a specific website (Amiberry in this case): `host-run chromium-browser https://github.com/BlitterStudio/amiberry`
-* Launching VLC to play a video (assuming Work: is a directory on the Linux filesystem): `host-run vlc Work:videos/my_video.mkv`
-* Using host-multivew to open the same video file (to demonstrae the simplicity): `host-multiview Work:videos/my_video.mkv`
+### Web Browsing
+Open a URL in the host's default browser:
+```shell
+host-run xdg-open "https://github.com/BlitterStudio/amiberry"
+```
+*(On macOS, use `host-run open ...` or just use `host-multiview` which handles both!)*
 
-* ### Create an icon to launch VLC
+### Playing Media
+Play a video file located on an Amiga partition using the host's media player:
+```shell
+host-run vlc "Work:Videos/My Holiday.mp4"
+```
+Or simply:
+```shell
+host-multiview "Work:Videos/My Holiday.mp4"
+```
 
-* Create a new text file, with these contents: `host-run vlc`
-* Create a new icon or copy one you like, give it the same name as your text file above.
-* Edit the icon's Information and make sure the Type is set to Project
-* Set the icon's default tool to "C:IconX" and save the changes
-* Double-clicking on the icon should now launch VLC on Linux.
+### DefIcons Integration
+Make AmigaOS automatically open `.mkv` files on the host:
+1.  Open **DefIcons**.
+2.  Add/Edit the `mkv` entry.
+3.  Set the **Default Tool** to `host-multiview`.
+4.  Now, double-clicking any MKV file in Workbench will play it on the host!
 
-### Create a DefIcons entry to handle MKV files
+## Building
 
-* Create a new entry to handle the .mkv extension
-* Add a Project Type icon for the new entry
-* Edit the icon's Information, and set the Default Tool to: `host-multiview`
-* Save the changes
-* Double clicking on an MKV file will now use `host-multiview` to open it, which will send it to Linux to be opened as if you double-clicked the file there. If you have a program that can handle such files installed (e.g. VLC) it should open up and play your file.
+This project is built using **GitHub Actions**. Every push to `main` or a version tag triggers a build using the `amigadev/crosstools:m68k-amigaos` Docker image.
+
+To build locally (requires Docker):
+```shell
+make all
+```
+
+## License
+MIT
