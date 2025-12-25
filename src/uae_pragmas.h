@@ -161,3 +161,20 @@ static int ExecuteOnHost(UBYTE *name)
 {
     return calltrap (88, name);
 }
+
+static int HostShell_Open(UBYTE *command)
+{
+    return calltrap(90, command);
+}
+static int HostShell_Read(ULONG handle, UBYTE *buffer, ULONG size)
+{
+    return calltrap(91, handle, buffer, size);
+}
+static int HostShell_Write(ULONG handle, UBYTE *buffer, ULONG size)
+{
+    return calltrap(92, handle, buffer, size);
+}
+static int HostShell_Close(ULONG handle)
+{
+    return calltrap(93, handle);
+}
