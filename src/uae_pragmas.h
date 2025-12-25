@@ -178,3 +178,8 @@ static int HostShell_Close(ULONG handle)
 {
     return calltrap(93, handle);
 }
+
+static int HostShell_View(UBYTE *filename)
+{
+    return calltrap(89, filename);
+}
