@@ -89,4 +89,4 @@ make all
 ```
 
 ## License
-MIT
+GPLv3
