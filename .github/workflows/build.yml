@@ -1,0 +1,69 @@
+name: Build Amiberry Host Tools
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: amigadev/crosstools:m68k-amigaos
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build tools
+      run: make all
+
+    - name: Determine version
+      id: version
+      run: |
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/}
+        else
+          VERSION="latest"
+        fi
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "Building version: $VERSION"
+
+    - name: Package tools
+      run: |
+        # Create LHA archives
+        # We assume 'lha' is installed in the container
+        lha a host-run-${{ env.VERSION }}.lha host-run
+        lha a host-multiview-${{ env.VERSION }}.lha host-multiview
+        lha a host-shell-${{ env.VERSION }}.lha host-shell
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: host-tools-package
+        path: "*.lha"
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: host-tools-package
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "*.lha"
+          generate_release_notes: true
