@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "uae_pragmas.h"
 
-static const char __ver[40] = "$VER: Host-Run v1.8 (2025-12-25)";
+static const char __ver[40] = "$VER: Host-Run v1.8 (2025-12-26)";
 
 #define MAX_CMD_LEN 4096
 

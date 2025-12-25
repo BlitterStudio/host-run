@@ -3,11 +3,11 @@
 #include <stdlib.h>
 #include "uae_pragmas.h"
 
-static const char __ver[40] = "$VER: Host-MultiView v1.4 (2025-12-25)";
+static const char __ver[40] = "$VER: Host-MultiView v1.8 (2025-12-26)";
 
 int print_usage()
 {
-    printf("Host-MultiView v1.4\n");
+    printf("Host-MultiView v1.8\n");
     printf("Host-MultiView is a command line tool to open files with the host default handler, from within UAE.\n");
     printf("%s\nUsage: host-multiview <filename> [filename2 ...]\n", __ver);
     return 0;

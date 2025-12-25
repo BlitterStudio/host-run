@@ -8,7 +8,7 @@
 
 #define OUTBUFSIZE 4095
 
-static const char version[] = "$VER: Host-Shell v1.2 (2025-12-25)";
+static const char version[] = "$VER: Host-Shell v1.8 (2025-12-26)";
 char outbuf[OUTBUFSIZE + 1];
 
 int main(int argc, char *argv[])
