@@ -5,13 +5,13 @@ CC			= m68k-amigaos-gcc
 INCLUDES	= -Isrc
 CFLAGS		= -mcpu=68020 -noixemul -Os -fomit-frame-pointer -std=c99
 
-host-run: $(OBJS)
+host-run: src/host-run.c
 	$(CC) $(CFLAGS) $(INCLUDES) src/host-run.c -o $@
 
-host-multiview: $(OBJS)
+host-multiview: src/host-multiview.c
 	$(CC) $(CFLAGS) $(INCLUDES) src/host-multiview.c -o $@
 
-host-shell: $(OBJS)
+host-shell: src/host-shell.c
 	$(CC) $(CFLAGS) $(INCLUDES) src/host-shell.c -o $@
 
 clean:

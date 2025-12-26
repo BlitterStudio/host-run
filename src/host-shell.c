@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "uae_pragmas.h"
-
 #include <proto/exec.h>
 #include <proto/dos.h>
 
+#include "uae_pragmas.h"
+
 #define OUTBUFSIZE 4095
 
-static const char version[] = "$VER: Host-Shell v1.8 (2025-12-26)";
+static const char version[] = "$VER: Host-Shell v1.9 (2025-12-26)";
 char outbuf[OUTBUFSIZE + 1];
 
 int main(int argc, char *argv[])
@@ -49,14 +49,42 @@ int main(int argc, char *argv[])
             return 10;
         }
 
+        BOOL esc_pending = FALSE;
+
         while (!brk)
         {
             // Check for output from host
-            actual = HostShell_Read(handle, (UBYTE *)buffer, sizeof(buffer) - 1);
+            actual = HostShell_Read(handle, (UBYTE *)buffer, sizeof(buffer) - 2);
             if (actual > 0)
             {
-                buffer[actual] = 0;
-                Write(out, buffer, actual);
+                int outptr = 0;
+                for (int i = 0; i < actual; i++) {
+                    unsigned char c = (unsigned char)buffer[i];
+                    if (esc_pending) {
+                        if (c == 0x5B) { // '['
+                            outbuf[outptr++] = 0x9B; // CSI
+                        } else {
+                            outbuf[outptr++] = 0x1B; // Original ESC
+                            outbuf[outptr++] = c;
+                        }
+                        esc_pending = FALSE;
+                    } else {
+                        if (c == 0x1B) {
+                            esc_pending = TRUE;
+                        } else {
+                            outbuf[outptr++] = c;
+                        }
+                    }
+                    
+                    // Safety check for outbuf overflow (should rarely happen given the math)
+                    if (outptr >= OUTBUFSIZE) {
+                        Write(out, outbuf, outptr);
+                        outptr = 0;
+                    }
+                }
+                if (outptr > 0) {
+                    Write(out, outbuf, outptr);
+                }
             }
             else if (actual < 0) // Error or closed
             {
@@ -67,10 +95,27 @@ int main(int argc, char *argv[])
             // Wait up to 20ms (20000 microseconds)
             if (WaitForChar(in, 20000)) 
             {
-                actual = Read(in, buffer, sizeof(buffer));
+                // Read less than buffer size to allow for expansion (max 2x)
+                actual = Read(in, buffer, 1024);
                 if (actual > 0)
                 {
-                    HostShell_Write(handle, (UBYTE *)buffer, actual);
+                    int outptr = 0;
+                    for (int i = 0; i < actual; i++) {
+                        unsigned char c = (unsigned char)buffer[i];
+                        if (c == 0x9B) { // Amiga CSI
+                            // Convert to ANSI ESC [
+                            outbuf[outptr++] = 0x1B;
+                            outbuf[outptr++] = 0x5B;
+                        } else if (c == 0x08) { // Backspace
+                            // Convert BS (0x08) to DEL (0x7F)
+                            outbuf[outptr++] = 0x7F;
+                        } else {
+                            outbuf[outptr++] = c;
+                        }
+                    }
+                    if (outptr > 0) {
+                        HostShell_Write(handle, (UBYTE *)outbuf, outptr);
+                    }
                 }
                 else if (actual == 0) // EOF
                 {
@@ -80,7 +125,10 @@ int main(int argc, char *argv[])
 
             if (SetSignal(0, 0) & SIGBREAKF_CTRL_C)
             {
-                brk = TRUE;
+                SetSignal(0, SIGBREAKF_CTRL_C); // Clear the signal
+                // Send Ctrl-C (ETX) to host
+                char ctrlc = 0x03;
+                HostShell_Write(handle, (UBYTE *)&ctrlc, 1);
             }
         }
 
