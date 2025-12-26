@@ -40,9 +40,9 @@ jobs:
         # We assume 'lha' is installed in the container
         # Create single LHA archive
         if [ ! -z "$VERSION" ]; then
-          lha a "Host-Tools-${VERSION}.lha" host-run host-multiview host-shell
+          lha a "Host-Tools-${VERSION}.lha" host-run host-multiview host-shell README.md
         else
-          lha a "Host-Tools-latest.lha" host-run host-multiview host-shell
+          lha a "Host-Tools-latest.lha" host-run host-multiview host-shell README.md
         fi
 
     - name: Upload Artifacts
