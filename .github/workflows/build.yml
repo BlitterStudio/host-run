@@ -29,10 +29,11 @@ jobs:
     - name: Determine version
       id: version
       run: |
-        if [[ $GITHUB_REF == refs/tags/* ]]; then
-          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        if [ "${{ github.ref_type }}" = "tag" ]; then
+          echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
         fi
-        echo "Building version: $VERSION"
+        echo "Ref type: ${{ github.ref_type }}"
+        echo "Ref name: ${{ github.ref_name }}"
 
     - name: Package tools
       run: |
